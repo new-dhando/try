@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Facebook Login Demo</title>
+  </head>
+  <body>
+    <h2>Login with Facebook Example</h2>
+
+    <!-- Facebook Login Button -->
+    <fb:login-button 
+      scope="public_profile,email"
+      onlogin="checkLoginState();">
+    </fb:login-button>
+
+    <div id="status"></div>
+
+    <!-- Load the Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID',  // <-- yahan apna Meta App ID daalna hoga
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v19.0'
+        });
+
+        FB.AppEvents.logPageView();
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          if (response.status === 'connected') {
+            FB.api('/me', {fields: 'name,email'}, function(profile) {
+              document.getElementById('status').innerHTML =
+                'Welcome, ' + profile.name + '!<br>Email: ' + profile.email;
+            });
+          } else {
+            document.getElementById('status').innerHTML = 'Please log in.';
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
